@@ -8,7 +8,6 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      lowercase: true,
       trim: true,
     },
 
@@ -27,7 +26,7 @@ const userSchema = new mongoose.Schema(
     },
 
     avatar: {
-      type: String // cloudnary url
+      type: String // cloudinary url
     },
 
     phone: { type: String },
@@ -43,7 +42,7 @@ const userSchema = new mongoose.Schema(
       required: [true, "Password is required!"],
     },
 
-    refreshtoken: { type: String }
+    refreshToken: { type: String }
   },
   { timestamps: true }
 );
