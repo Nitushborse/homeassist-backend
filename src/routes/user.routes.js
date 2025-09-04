@@ -11,14 +11,15 @@ router.route("/login").post(loginUser)
 
 //secured routes
 router.route("/logout").post(verifyJwt, logOutUser)
-router.route("/currentuser").get(verifyJwt, getCurrentUser)
-router.route("/:id").get(getUserById);
 router.route("/profile").patch(verifyJwt, upload.fields([
     {
         name: "avatar",
         maxCount: 1
-    }]), completeUserProfile)
+    }]), completeUserProfile);
 
+
+router.route("/currentuser").get(verifyJwt, getCurrentUser)
+router.route("/getuserbyid/:id").get(getUserById);
 
 
 export default router

@@ -97,7 +97,7 @@ const loginUser = asyncHandler(async (req, res) => {
         secure: true
     }
 
-    res.status(200)
+    return res.status(200)
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
         .json(
@@ -130,7 +130,7 @@ const logOutUser = asyncHandler(async (req, res) => {
         secure: true
     }
 
-    res.status(200)
+    return res.status(200)
         .clearCookie("accessToken", options)
         .clearCookie("refreshToken", options)
         .json(
@@ -176,13 +176,13 @@ const completeUserProfile = asyncHandler(async (req, res) => {
         throw new ApiError(404, "User not found");
     }
 
-    res.status(200).json(
+    return res.status(200).json(
         new ApiResponse(200, updatedUser, "Profile updated successfully")
     );
 })
 
 const getCurrentUser = asyncHandler(async (req, res) => {
-    res.status(200)
+    return res.status(200)
         .json(
             new ApiResponse(200, req.user, "user fetched successfully")
         )
@@ -199,7 +199,7 @@ const getUserById = asyncHandler(async (req, res) => {
         );
     }
 
-    res.status(200).json(
+    return res.status(200).json(
         new ApiResponse(200, user, "User fetched successfully")
     );
 })

@@ -31,7 +31,18 @@ const jobSchema = new mongoose.Schema(
       type: String,
       enum: ['open', 'in_progress', 'completed', 'cancelled'],
       default: "open"
+    },
+
+    startDate: {
+      type: Date,  // When the job is planned to start
+      default: null
+    },
+
+    endDate: {
+      type: Date,  // When the job is expected to end
+      default: null
     }
+
   },
   { timestamps: true }
 );

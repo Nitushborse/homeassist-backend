@@ -37,6 +37,8 @@ const userSchema = new mongoose.Schema(
 
     bio: { type: String },
 
+    rating:{type: Number},
+
     password: {
       type: String,
       required: [true, "Password is required!"],
