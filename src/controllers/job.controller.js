@@ -168,6 +168,35 @@ const getClientPostedJobs = asyncHandler(async (req, res) => {
 })
 
 
+const getFulljobDetailsToClient = asyncHandler(async(req, res) => {
+
+    const {jobId} = req.params
+    
+    const jobRequests = await JobRequest.find({ jobId })
+        .populate("freelancerId", "name email skills rating avatar") 
+        .sort({ createdAt: -1 });
+
+    
+    if (!jobRequests || jobRequests.length === 0) {
+        return res.status(404).json(
+            new ApiResponse(404, jobRequests, "No requests found for this job")
+        )
+    }
+
+    return res.status(200)
+        .json(
+            new ApiResponse(
+                200,
+                {
+                    jobRequests,
+                    count: jobRequests.length,
+                },
+                "Job requests fetched successfully"
+            )
+        )
+})
+
+
 const acceptJobRequest = asyncHandler(async (req, res) => {
     const { requestId } = req.params;
 
@@ -261,7 +290,27 @@ const getAllJobsByCategory = asyncHandler(async (req, res) => {
     );
 });
 
+const getFulljobDetailsToFreelancer = asyncHandler(async(req, res) => {
+    const { jobId } = req.params;
 
+    // Find job and populate client details
+    const job = await Job.findById(jobId)
+        .populate("clientId", "name email phone location")
+
+    if (!job) {
+        return res.status(404)
+        .json(
+            new ApiResponse(404, {}, "Job not found")
+        )
+    }
+
+    return res.status(200)
+    .json(
+        new ApiResponse(
+            200, job, "job details fetched successfully"
+        )
+    )
+})
 
 const createJobRequest = asyncHandler(async (req, res) => {
     const { jobId } = req.body;
@@ -465,9 +514,11 @@ export {
     updateJob,
     getAllJobs,
     getClientPostedJobs,
+    getFulljobDetailsToClient,
     acceptJobRequest,
     rejectJobRequest,
     getAllJobsByCategory,
+    getFulljobDetailsToFreelancer,
     createJobRequest,
     getRequestedJobs,
     getJobDetails,
