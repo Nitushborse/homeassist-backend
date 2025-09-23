@@ -93,9 +93,15 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
+    // const options = {
+    //     httpOnly: true,
+    //     secure: true
+    // }
+
     const options = {
         httpOnly: true,
-        secure: true
+        secure: process.env.NODE_ENV === "production", // only secure in prod
+        sameSite: "strict"
     }
 
     return res.status(200)
@@ -230,21 +236,27 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
         }
 
+        // const options = {
+        //     httpOnly: true,
+        //     secure: true
+        // }
+
         const options = {
             httpOnly: true,
-            secure: true
+            secure: process.env.NODE_ENV === "production", // only secure in prod
+            sameSite: "strict"
         }
 
-        const { accessToken, newRefreshToken } = await generateAccessAndRefreshToken(user._id)
+        const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id)
 
         return res
             .status(200)
             .cookie("accessToken", accessToken, options)
-            .cookie("refreshToken", newRefreshToken, options)
+            .cookie("refreshToken", refreshToken, options)
             .json(
                 new ApiResponse(
                     200,
-                    { accessToken, refreshToken: newRefreshToken },
+                    { accessToken, refreshToken },
                     "Access token refreshed"
                 )
             )

@@ -95,6 +95,7 @@ router.route("/rejectjobrequest/:requestId").patch(verifyJwt, authorizeRoles("cl
 
 // Freelancer-only routes
 router.route("/getjobsbycategory/:categoryId").get(verifyJwt, authorizeRoles("freelancer"), getAllJobsByCategory)
+router.route("/getRequestedJobs").get(verifyJwt, authorizeRoles("freelancer"), getRequestedJobs)
 router.route("/getfulldetails/:jobId").get(verifyJwt, authorizeRoles("freelancer"), getFulljobDetailsToFreelancer)
 router.route("/createjobrequest").post(verifyJwt, authorizeRoles("freelancer"), createJobRequest)
 router.route("/getrequestedjobs").get(verifyJwt, authorizeRoles("freelancer"), getRequestedJobs)
