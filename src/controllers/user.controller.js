@@ -188,6 +188,46 @@ const completeUserProfile = asyncHandler(async (req, res) => {
     );
 })
 
+const checkUserProfileCompletion = asyncHandler(async (req, res) => {
+    const userId = req.user._id; // coming from verifyJWT middleware
+    const user = await User.findById(userId).select("-password -refreshToken");
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    let isProfileComplete = true;
+    let missingFields = [];
+
+    if (user.role === "client") {
+        if (!user.phone) missingFields.push("phone");
+        if (!user.location) missingFields.push("location");
+        if (!user.bio) missingFields.push("bio");
+    }
+
+    if (user.role === "freelancer") {
+        if (!user.phone) missingFields.push("phone");
+        if (!user.location) missingFields.push("location");
+        if (!user.skills || user.skills.length === 0) missingFields.push("skills");
+        if (!user.bio) missingFields.push("bio");
+    }
+
+    // You can add conditions for admin if needed
+    // if (user.role === "admin") { ... }
+
+    if (missingFields.length > 0) {
+        isProfileComplete = false;
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, {
+            user,
+            isProfileComplete,
+            missingFields
+        }, "Profile completion status fetched successfully")
+    );
+});
+
 const getCurrentUser = asyncHandler(async (req, res) => {
     return res.status(200)
         .json(
@@ -271,6 +311,7 @@ export {
     logOutUser,
     refreshAccessToken,
     completeUserProfile,
+    checkUserProfileCompletion,
     getCurrentUser,
     getUserById
 }

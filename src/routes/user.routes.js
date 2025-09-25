@@ -32,6 +32,7 @@ import {
     loginUser, 
     logOutUser, 
     completeUserProfile, 
+    checkUserProfileCompletion,
     getCurrentUser, 
     getUserById, 
     refreshAccessToken 
@@ -56,6 +57,8 @@ router.route("/profile").patch(
     upload.fields([{ name: "avatar", maxCount: 1 }]),
     completeUserProfile
 );
+
+router.route("/checkProfile").get(verifyJwt, checkUserProfileCompletion);
 
 router.route("/currentuser").get(
     verifyJwt,
